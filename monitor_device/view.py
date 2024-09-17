@@ -1,21 +1,14 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import List, Union
 import shutil
-from monitor_device.sonic_data import *
-from monitor_device import Screen, ScreenList, TerminalSize, ScreenData
-from dataclasses import dataclass
+from monitor_device import Screen, ScreenList, TerminalSize
 from abc import abstractmethod, ABC
 import shutil
 import datetime
-from typing import Union
 from monitor_device import (
     Screen,
     ScreenList,
     TerminalSize,
-    UserScreen,
-    ScreenData,
     MainViewData,
     LldpViewData,
     InterfaceViewData,

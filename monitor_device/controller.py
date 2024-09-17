@@ -2,7 +2,7 @@ import threading
 from monitor_device import Screen
 from monitor_device.sonic_data import *
 from monitor_device.view import view_builder
-from monitor_device import data_model_builder
+from monitor_device.data_models import data_model_builder
 import shutil
 import time
 from typing import Tuple, Union
