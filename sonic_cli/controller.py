@@ -144,7 +144,7 @@ class Controller:
                 time.sleep(interval)
                 self.display_screen(screen=screen_value)
 
-                columns, lines = shutil.get_terminal_size()
+                #columns, lines = shutil.get_terminal_size()
         except KeyboardInterrupt:
             # Handle the KeyboardInterrupt exception (Ctrl+C)
             print("\nExiting monitor tool...")

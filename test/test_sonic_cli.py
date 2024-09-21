@@ -13,3 +13,4 @@ def test_import():
         data_model_builder,
     )
     from sonic_cli.controller import Controller, Configuration
+    from sonic_cli import monitor
