@@ -1,5 +1,5 @@
-from monitor_device import Controller, Configuration
-from monitor_device.sonic_data_testing_double import SonicDataTestingDouble
+from sonic_cli import Controller, Configuration
+from sonic_cli.sonic_data_testing_double import SonicDataTestingDouble
 
 
 controller = Controller(

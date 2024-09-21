@@ -1,21 +1,19 @@
 #!/usr/bin/env python
 from __future__ import annotations
 import shutil
-from monitor_device import Screen, ScreenList, TerminalSize
+from sonic_cli import Screen, ScreenList, TerminalSize
 from abc import abstractmethod, ABC
 import shutil
 import datetime
-from monitor_device import (
+from sonic_cli import (
     Screen,
     ScreenList,
     TerminalSize,
     MainViewData,
     LldpViewData,
     InterfaceViewData,
-    ViewData
+    ViewData,
 )
-
-
 
 
 class View(ABC):

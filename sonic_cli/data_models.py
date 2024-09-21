@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Union
 from enum import Enum
-from monitor_device.sonic_data import *
+from sonic_cli.sonic_data import *
 from typing import List
 
 
@@ -126,8 +126,10 @@ class LldpViewData(ViewData):
 
 ScreenData = Union[MainViewData, InterfaceViewData, LldpViewData]
 
+
 def data_model_builder(
-    screen: Screen = Screen.MAIN_VIEW, sd: SonicData = SonicData()) -> ScreenData:
+    screen: Screen = Screen.MAIN_VIEW, sd: SonicData = SonicData()
+) -> ScreenData:
     """
     Returnes a data model to seed one of the 'Screen' types that are supported.
     """

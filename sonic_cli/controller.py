@@ -1,8 +1,8 @@
 import threading
-from monitor_device import Screen
-from monitor_device.sonic_data import *
-from monitor_device.view import view_builder
-from monitor_device.data_models import data_model_builder
+from sonic_cli import Screen
+from sonic_cli.sonic_data import *
+from sonic_cli.view import view_builder
+from sonic_cli.data_models import data_model_builder
 import shutil
 import time
 from typing import Tuple, Union
@@ -14,15 +14,13 @@ import signal
 message_queue: queue.Queue[Union[Screen, float]] = queue.Queue()
 
 
-def clear_screen():
-    """Clears the terminal screen."""
-    os.system("cls" if os.name == "nt" else "clear")
-
-
-def display_message(message):
-    """Displays the given message on the screen."""
-    clear_screen()
-    print(message)
+def display_to_screen(content: str) -> None:
+    # clear screen:
+    sys.stdout.write("\033[2J")
+    # cursor to (0, 0)
+    sys.stdout.write("\033[H")
+    print(content)
+    sys.stdout.flush()
 
 
 def signal_handler(signal, frame):
@@ -99,16 +97,7 @@ class Controller:
         """
         data = data_model_builder(screen, self.configuration.sonic_data_retriever)
         view = view_builder(screen=screen, data=data)
-
-        def print_at_top(content):
-            # clear screen:
-            sys.stdout.write("\033[2J")
-            # cursor to (0, 0)
-            sys.stdout.write("\033[H")
-            print(content)
-            sys.stdout.flush()
-
-        print_at_top(view.render())
+        display_to_screen(view.render())
 
     @staticmethod
     def flip_screen_or_set_interval(

@@ -1,4 +1,4 @@
-from monitor_device.sonic_data import (
+from sonic_cli.sonic_data import (
     LLDPLocalChassis,
     PortChannelInterfacesState,
     PortChannelInterfaceState,
@@ -16,7 +16,7 @@ local_chassis = LLDPLocalChassis(
     lldp_loc_sys_desc="SONiC Software Version: SONiC.SONiC-AX-2210-202211.0-22072024 - HwSku: Accton-AS4630-54PE - Distribution: Debian 11.10 - Kernel: 5.10.0-18-2-amd64",
     lldp_loc_chassis_id="90:2d:77:51:78:70",
     lldp_loc_sys_cap_enabled="28 00",
-    lldp_loc_sys_name="ausffnx1-fc-acc-sw-1-6",
+    lldp_loc_sys_name="example-sw-1-6",
     lldp_loc_chassis_id_subtype="4",
     lldp_loc_man_addr="7.32.1.6",
 )
@@ -74,7 +74,7 @@ lldp_entries = LLDPEntries(
     ]
 )
 software_information = SoftwareVersionInformation(
-    software_version="SONiC.SONiC-AX-2210-202211.0-22072024",
+    software_version="202211",
     hwsku="Accton-AS4630-54PE",
     distribution="Debian 11.10",
     kernel="5.10.0-18-2-amd64",
