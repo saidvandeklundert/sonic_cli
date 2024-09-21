@@ -50,3 +50,28 @@ def test_controller_view_lldp(sonic_data_testing_double):
         Configuration(sonic_data_retriever=sonic_data_testing_double)
     )
     controller.display_screen(Screen.LLDP_VIEW)
+
+# test_signal_handler.py
+import pytest
+import signal
+from sonic_cli.controller import signal_handler
+
+def test_signal_handler(monkeypatch, capsys):
+    
+    def mock_exit(code):
+        """
+        Mocks sys.exit and prevents the actual exit.
+        """
+        raise SystemExit(code)
+    
+    # set to use the mock:
+    monkeypatch.setattr('sys.exit', mock_exit)
+    
+    # Send a SIGINT signal to trigger the signal_handler
+    with pytest.raises(SystemExit) as excinfo:
+        signal_handler(signal.SIGINT, None)
+    
+ 
+    captured = capsys.readouterr()
+    assert "\nExiting..." in captured.out
+    assert excinfo.value.code == 0

@@ -11,7 +11,21 @@ import sys
 import os
 import signal
 
-message_queue: queue.Queue[Union[Screen, float]] = queue.Queue()
+class Instruction(Enum):
+    SET_SCREEN = "set_screen"
+    SET_INTERVAL = "set_interval"
+
+
+@dataclass
+class QueueSignal:
+    instruction: Instruction
+    interval: Optional[float] = None
+    screen: Optional[Screen] = None
+
+message_queue: queue.Queue[Union[Screen, float, QueueSignal]] = queue.Queue()
+
+
+
 
 
 def display_to_screen(content: str) -> None:
@@ -110,6 +124,12 @@ class Controller:
         """
         if not message_queue.empty():
             message_from_queue = message_queue.get(1)
+            if isinstance(message_from_queue, QueueSignal):
+                raise RuntimeError("err")
+            #    print(message_from_queue)
+            #    # raise RuntimeError("ee")
+            #    screen = message_from_queue
+            #    return (message_from_queue, interval)            
             if isinstance(message_from_queue, Screen):
                 print(message_from_queue)
                 # raise RuntimeError("ee")
@@ -144,7 +164,7 @@ class Controller:
                 time.sleep(interval)
                 self.display_screen(screen=screen_value)
 
-                #columns, lines = shutil.get_terminal_size()
+                # columns, lines = shutil.get_terminal_size()
         except KeyboardInterrupt:
             # Handle the KeyboardInterrupt exception (Ctrl+C)
             print("\nExiting monitor tool...")
