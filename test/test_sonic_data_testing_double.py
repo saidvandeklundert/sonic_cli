@@ -1,5 +1,5 @@
 from sonic_cli import Controller, Configuration
-from sonic_cli.sonic_data_testing_double import SonicDataTestingDouble
+from test.sonic_data_testing_double import SonicDataTestingDouble
 
 
 def test_testing_double():

@@ -3,7 +3,7 @@ from sonic_cli.data_models import (
     lldp_view_model_builder,
     interface_view_model_builder,
 )
-from sonic_cli.sonic_data_testing_double import SonicDataTestingDouble
+from test.sonic_data_testing_double import SonicDataTestingDouble
 from sonic_cli.view import MainView, InterfacesView, LldpView
 
 

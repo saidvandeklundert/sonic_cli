@@ -1,6 +1,6 @@
 import pytest
 from sonic_cli import Configuration
-from sonic_cli.sonic_data_testing_double import SonicDataTestingDouble
+from test.sonic_data_testing_double import SonicDataTestingDouble
 
 
 @pytest.fixture

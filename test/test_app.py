@@ -4,7 +4,7 @@ import pytest
 from unittest import mock
 from sonic_cli import Configuration, Controller, Screen
 from sonic_cli.sonic_data import SonicData
-from sonic_cli.sonic_data_testing_double import SonicDataTestingDouble
+from test.sonic_data_testing_double import SonicDataTestingDouble
 
 from sonic_cli import monitor
 
