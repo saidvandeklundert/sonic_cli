@@ -11,21 +11,24 @@ import sys
 import os
 import signal
 
+
 class Instruction(Enum):
     SET_SCREEN = "set_screen"
     SET_INTERVAL = "set_interval"
 
 
 @dataclass
-class QueueSignal:
-    instruction: Instruction
+class QueueMessage:
+    """
+    Message used to signal the app to change behavior or change the view.
+    """
+
+    instruction: Optional[Instruction] = None
     interval: Optional[float] = None
     screen: Optional[Screen] = None
 
-message_queue: queue.Queue[Union[Screen, float, QueueSignal]] = queue.Queue()
 
-
-
+MESSAGE_QUEUE: queue.Queue[QueueMessage] = queue.Queue()
 
 
 def display_to_screen(content: str) -> None:
@@ -47,33 +50,43 @@ def signal_handler(signal, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 
+def input_handler():
+    """
+    Posts a QueueMessage based on the input that is read.
+    """
+    line = input()
+    if len(line) >= 1 and line[0].isdigit():
+        new_interval = float(line)
+        MESSAGE_QUEUE.put(QueueMessage(interval=new_interval))
+        print("change interval")
+    elif line.lower() == "i" or line == "interface":
+        MESSAGE_QUEUE.put(QueueMessage(screen=Screen.INTERFACE_VIEW))
+        print("change to interface view")
+    elif line.lower() == "m" or line == "main":
+        MESSAGE_QUEUE.put(QueueMessage(screen=Screen.MAIN_VIEW))
+        print("change to main view")
+    elif line.lower() == "l" or line == "lldp":
+        MESSAGE_QUEUE.put(QueueMessage(screen=Screen.LLDP_VIEW))
+        print("change to main view")
+    elif line.lower() == "q":
+        print("\nExiting...")
+        os._exit(0)
+    else:
+        print(f"{line} is not a valid input option.")
+    print(f"selection input: {line}")
+
+
 def input_thread_function():
     """
     Thread that constantly listens for user input.
 
-    Either halts the program or uses a message queue to flip the view.
+    Halts the program , flips the view, etc.
     """
-    while True:
-        line = input()
-        if len(line) >= 1 and line[0].isdigit():
-            new_interval = float(line)
-            message_queue.put(new_interval)
-            print("change interval")
-        elif line.lower() == "q":
-            print("\nExiting...")
-            os._exit(0)  # Exit the entire process
-        elif line.lower() == "i" or line == "interface":
-            message_queue.put(Screen.INTERFACE_VIEW)
-            print("change to interface view")
-        elif line.lower() == "m" or line == "main":
-            message_queue.put(Screen.MAIN_VIEW)
-            print("change to main view")
-        elif line.lower() == "l" or line == "lldp":
-            message_queue.put(Screen.LLDP_VIEW)
-            print("change to main view")
-        else:
-            print(f"{line} is not a valid input option.")
-        print(f"selection input: {line}")
+    try:
+        while True:
+            input_handler()
+    except Exception as err:
+        print(err)
 
 
 @dataclass
@@ -113,33 +126,19 @@ class Controller:
         view = view_builder(screen=screen, data=data)
         display_to_screen(view.render())
 
-    @staticmethod
-    def flip_screen_or_set_interval(
-        screen: Screen, interval: float
-    ) -> Tuple[Screen, float]:
+    def flip_screen_or_set_interval(self) -> None:
         """
         Communicate to the input thread and:
         - instruct the view to change
         - change the interval at which the program runs
         """
-        if not message_queue.empty():
-            message_from_queue = message_queue.get(1)
-            if isinstance(message_from_queue, QueueSignal):
-                raise RuntimeError("err")
-            #    print(message_from_queue)
-            #    # raise RuntimeError("ee")
-            #    screen = message_from_queue
-            #    return (message_from_queue, interval)            
-            if isinstance(message_from_queue, Screen):
-                print(message_from_queue)
-                # raise RuntimeError("ee")
-                screen = message_from_queue
-                return (message_from_queue, interval)
-            elif isinstance(message_from_queue, float):
-                interval = message_from_queue
-                return (screen, message_from_queue)
-
-        return (screen, interval)
+        if not MESSAGE_QUEUE.empty():
+            message_from_queue = MESSAGE_QUEUE.get(1)
+            if isinstance(message_from_queue, QueueMessage):
+                if message_from_queue.screen is not None:
+                    self.configuration.screen = message_from_queue.screen
+                if message_from_queue.interval is not None:
+                    self.configuration.interval = message_from_queue.interval
 
     def run(self) -> None:
         """
@@ -148,23 +147,16 @@ class Controller:
         Starts an input thread that listens for user input and runs the rest of the
          program under the main thread.
         """
-        # start the input thread:
         input_thread = threading.Thread(target=input_thread_function)
-        input_thread.daemon = (
-            True  # Allow the thread to exit when the main program exits
-        )
+        input_thread.daemon = True
         input_thread.start()
-        interval = self.configuration.interval
-        screen_value = self.configuration.screen
         try:
             while True:
-                screen_value, interval = self.flip_screen_or_set_interval(
-                    screen_value, interval
-                )
+                self.flip_screen_or_set_interval()
+                interval = self.configuration.interval
+                screen_value = self.configuration.screen
                 time.sleep(interval)
                 self.display_screen(screen=screen_value)
-
                 # columns, lines = shutil.get_terminal_size()
-        except KeyboardInterrupt:
-            # Handle the KeyboardInterrupt exception (Ctrl+C)
+        except KeyboardInterrupt:  # Handles 'Ctrl+C'
             print("\nExiting monitor tool...")
