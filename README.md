@@ -34,8 +34,6 @@ The application is structured along the lines of MVC.
 
 
 Todo:
-- change the message queue to take in an object instead of a Union of string/int.
-- change the test double, or move it somewhere
 - add tail of /var/log/syslog.txt to main view
 - add mem and CPU usage to the main view
 - add systems view that:
