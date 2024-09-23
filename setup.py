@@ -14,6 +14,7 @@ setup(
     url="https://github.com/saidvandeklundert/sonic_cli",
     install_requires=[
         "redis>=5.0.6",
+        "psutil>=5.9.0",
     ],
     # Entry points
     entry_points={
