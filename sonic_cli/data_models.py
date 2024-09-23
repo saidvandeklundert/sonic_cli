@@ -4,6 +4,10 @@ from typing import Union
 from enum import Enum
 from sonic_cli.sonic_data import *
 from typing import List
+from dataclasses import dataclass
+from sonic_cli.system_data import get_cpu_cores, get_memory_usage, CpuCoresUsage, MemoryUsage
+
+
 
 
 class Screen(str, Enum):
@@ -102,6 +106,8 @@ class MainViewData(ViewData):
     kernel_version: str
     model: str
     lldp_neighbors: List[str]
+    cpu_usage: CpuCoresUsage
+    memory_usage: MemoryUsage
     screen: Screen = Screen.MAIN_VIEW
 
 
@@ -155,6 +161,10 @@ def main_view_model_builder(sd: SonicData) -> MainViewData:
         lldp_entry.lldp_rem_sys_name
         for lldp_entry in retrieved_lldp_entries.lldp_entries
     ]
+
+    cpu_usage = get_cpu_cores()
+    memory_usage = get_memory_usage()
+
     return MainViewData(
         hostname=retrieved_meta_data.hostname,
         software_version=retrieved_software_information.software_version,
@@ -162,6 +172,8 @@ def main_view_model_builder(sd: SonicData) -> MainViewData:
         kernel_version=retrieved_software_information.kernel,
         model=retrieved_meta_data.hwsku,
         lldp_neighbors=retrieved_lldp_neighbor_names,
+        cpu_usage=cpu_usage,
+        memory_usage=memory_usage,
     )
 
 

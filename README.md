@@ -35,7 +35,6 @@ The application is structured along the lines of MVC.
 
 Todo:
 - add tail of /var/log/syslog.txt to main view
-- add mem and CPU usage to the main view
 - add systems view that:
   - that displays CPU and mem usage
   - gives a tail of the logs
