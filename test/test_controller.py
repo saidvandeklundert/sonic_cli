@@ -123,6 +123,7 @@ def test_controller_view_lldp(sonic_data_testing_double):
     )
     controller.display_screen(Screen.LLDP_VIEW)
 
+
 def test_signal_handler(monkeypatch, capsys):
     def mock_exit(code):
         """
@@ -153,11 +154,9 @@ def test_controller_flip_screen(sonic_data_testing_double):
     MESSAGE_QUEUE.put(QueueMessage(screen=Screen.LLDP_VIEW))
     controller.flip_screen_or_set_interval()
     assert controller.configuration.interval == 1.0
-    assert controller.configuration.screen == Screen.LLDP_VIEW    
+    assert controller.configuration.screen == Screen.LLDP_VIEW
     # change interval:
     MESSAGE_QUEUE.put(QueueMessage(interval=5.4))
     controller.flip_screen_or_set_interval()
     assert controller.configuration.interval == 5.4
-    assert controller.configuration.screen == Screen.LLDP_VIEW    
-
-
+    assert controller.configuration.screen == Screen.LLDP_VIEW
