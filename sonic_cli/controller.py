@@ -3,9 +3,7 @@ from sonic_cli import Screen
 from sonic_cli.sonic_data import *
 from sonic_cli.view import view_builder
 from sonic_cli.data_models import data_model_builder
-import shutil
 import time
-from typing import Tuple, Union
 import queue
 import sys
 import os

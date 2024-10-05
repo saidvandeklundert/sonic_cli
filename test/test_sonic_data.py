@@ -9,6 +9,8 @@ from sonic_cli.sonic_data import (
     LLDPEntries,
     ChassisInfo,
     DeviceMetaData,
+    LLDPLocalChassis,
+    SoftwareVersionInformation,
 )
 
 # Mock data for testing
@@ -57,10 +59,43 @@ MOCK_DEVICE_METADATA_DATA = {
     b"type": b"ToRRouter",
 }
 
+MOCK_LLDP_LOCAL_CHASSIS = {
+    b"lldp_loc_sys_cap_supported": b"28 00",
+    b"lldp_loc_sys_desc": b"SONiC Software Version: SONiC.HEAD.0-0a2f709cd - HwSku: Accton-AS4630-54PE - Distribution: Debian 11.9 - Kernel: 5.10.0-18-2-amd64",
+    b"lldp_loc_chassis_id": b"e0:01:a6:1a:1d:00",
+    b"lldp_loc_sys_cap_enabled": b"28 00",
+    b"lldp_loc_sys_name": b"lab77-fc-acc-sw-1-9",
+    b"lldp_loc_chassis_id_subtype": b"4",
+    b"lldp_loc_man_addr": b"240.127.1.1,fd00::1",
+}
+
 
 @pytest.fixture
 def sonic_data():
     return SonicData()
+
+
+@patch("sonic_cli.sonic_data.redis.Redis")
+def test_get_lldp_local_chassis(mock_redis, sonic_data):
+    mock_redis_instance = mock_redis.return_value
+    mock_redis_instance.hgetall.return_value = MOCK_LLDP_LOCAL_CHASSIS
+
+    lldp_local_chassis = sonic_data.get_lldp_local_chassis()
+    assert isinstance(lldp_local_chassis, LLDPLocalChassis)
+    assert lldp_local_chassis.lldp_loc_chassis_id == MOCK_LLDP_LOCAL_CHASSIS[
+        b"lldp_loc_chassis_id"
+    ].decode("utf-8")
+    assert lldp_local_chassis.lldp_loc_sys_name == MOCK_LLDP_LOCAL_CHASSIS[
+        b"lldp_loc_sys_name"
+    ].decode("utf-8")
+
+
+@patch("sonic_cli.sonic_data.redis.Redis")
+def test_get_software_version_information(mock_redis, sonic_data):
+    mock_redis_instance = mock_redis.return_value
+    mock_redis_instance.hgetall.return_value = MOCK_LLDP_LOCAL_CHASSIS
+    software_version_information = sonic_data.get_software_version_information()
+    assert isinstance(software_version_information, SoftwareVersionInformation)
 
 
 @patch("sonic_cli.sonic_data.redis.Redis")

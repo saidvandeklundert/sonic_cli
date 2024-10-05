@@ -2,6 +2,7 @@ import psutil
 from typing import List, Optional
 from dataclasses import dataclass
 
+
 @dataclass
 class CpuCore:
     """
@@ -23,15 +24,9 @@ class CpuCoresUsage:
         result = []
         for cpu_core in self.cpu_cores:
             result.append(f"core {cpu_core.number} usage {cpu_core.usage}")
-        result.append(
-            f"CPU usage average 1 min: {self.average_usage_last_minute}"
-        )
-        result.append(
-            f"CPU usage average 5 min: {self.average_usage_last_5_minutes}"
-        )
-        result.append(
-            f"CPU usage average 15 min: {self.average_usage_last_15_minutes}"
-        )
+        result.append(f"CPU usage average 1 min: {self.average_usage_last_minute}")
+        result.append(f"CPU usage average 5 min: {self.average_usage_last_5_minutes}")
+        result.append(f"CPU usage average 15 min: {self.average_usage_last_15_minutes}")
         return "\n".join(result)
 
     def _str__(self) -> str:
@@ -139,6 +134,3 @@ def get_memory_usage() -> MemoryUsage:
         shared=getattr(memory_info, "shared", None),
         slab=getattr(memory_info, "slab", None),
     )
-
-
-

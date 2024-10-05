@@ -94,30 +94,34 @@ class MainView(View):
         )
         user_screen.append_yellow(self.section_separator())
         for cpu in self.data.cpu_usage.cpu_cores:
-            user_screen.append_light_yellow(
-            f"CPU {cpu.number} is using {cpu.usage}%"
-        )
+            user_screen.append_light_yellow(f"CPU {cpu.number} is using {cpu.usage}%")
         user_screen.append_yellow(self.section_separator())
         user_screen.append_light_yellow(
-            f"CPU usage average 1 min:".ljust(30) + f"{self.data.cpu_usage.average_usage_last_minute}"
+            f"CPU usage average 1 min:".ljust(30)
+            + f"{self.data.cpu_usage.average_usage_last_minute}"
         )
         user_screen.append_light_yellow(
-            f"CPU usage average 5 min:".ljust(30) + f"{self.data.cpu_usage.average_usage_last_5_minutes}"
+            f"CPU usage average 5 min:".ljust(30)
+            + f"{self.data.cpu_usage.average_usage_last_5_minutes}"
         )
         user_screen.append_light_yellow(
-            f"CPU usage average 15 min:".ljust(30) + f"{self.data.cpu_usage.average_usage_last_15_minutes}"
-        )     
-        user_screen.append_yellow(self.section_separator())   
-           
+            f"CPU usage average 15 min:".ljust(30)
+            + f"{self.data.cpu_usage.average_usage_last_15_minutes}"
+        )
+        user_screen.append_yellow(self.section_separator())
+
         user_screen.append_light_yellow(
-            f"Memory total in GB:".ljust(30) + f"{self.data.memory_usage.total_memory_in_gb}"
-        )        
-        user_screen.append_light_yellow(
-            f"Memory available in GB:".ljust(30) + f"{self.data.memory_usage.available_memory_in_gb} ( {100 - self.data.memory_usage.percent:.1f}% )"
+            f"Memory total in GB:".ljust(30)
+            + f"{self.data.memory_usage.total_memory_in_gb}"
         )
         user_screen.append_light_yellow(
-            f"Memory used in GB:".ljust(30) + f"{self.data.memory_usage.used_memory_in_gb} ( {self.data.memory_usage.percent:.1f}% )"
-        )        
+            f"Memory available in GB:".ljust(30)
+            + f"{self.data.memory_usage.available_memory_in_gb} ( {100 - self.data.memory_usage.percent:.1f}% )"
+        )
+        user_screen.append_light_yellow(
+            f"Memory used in GB:".ljust(30)
+            + f"{self.data.memory_usage.used_memory_in_gb} ( {self.data.memory_usage.percent:.1f}% )"
+        )
 
         user_screen.append_yellow(self.section_separator())
         user_screen.append_light_yellow(

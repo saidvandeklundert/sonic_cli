@@ -5,9 +5,12 @@ from enum import Enum
 from sonic_cli.sonic_data import *
 from typing import List
 from dataclasses import dataclass
-from sonic_cli.system_data import get_cpu_cores, get_memory_usage, CpuCoresUsage, MemoryUsage
-
-
+from sonic_cli.system_data import (
+    get_cpu_cores,
+    get_memory_usage,
+    CpuCoresUsage,
+    MemoryUsage,
+)
 
 
 class Screen(str, Enum):
